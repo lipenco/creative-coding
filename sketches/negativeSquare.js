@@ -12,15 +12,20 @@ const colorMap = {
 
 const settings = {
 dimensions: [ 60,60 ],
-  orientation: 'portrait',
   pixelsPerInch: 300,
   scaleToView: true,
+  playbackRate: "fixed",
   units: 'cm',
+  animate: true,
+  scaleToView: true,
+  playbackRate: 'throttle',
+  animate: true,
+  fps: 0.5
 };
 
 const getRandomInt = (max, min = 0) => min + Math.floor(Math.random() * Math.floor(max));
 const isEvenNumber = (num) => Math.floor(num) % 2 === 0
-const randomColorScheme = colorMap[getRandomInt(Object.keys(colorMap).length, 1)]
+const randomColorScheme = () => colorMap[getRandomInt(Object.keys(colorMap).length, 1)]
 
 // draw an arc on the canvas
 const drawArc = (context, colorScheme, cx, cy, radius, sAngle, eAngle) => {
@@ -47,38 +52,29 @@ const sketch = (context) => {
   let marginLeft = (context.width - drawingWidth) / 2;
   let marginTop = (context.height - drawingHeight) / 2;
   
-  // randomize missing circle segments
-  let startDrawingCircleAngleGrid = randomizeMissingCircleSegments(rows, columns)
-
-  
   return ({ context, width, height, units }) => {
-
-    context.fillStyle = randomColorScheme[2] ?? "white"
+    const colorScheme = randomColorScheme()   
+    const startDrawingCircleAngleGrid = randomizeMissingCircleSegments(rows, columns)
+    context.fillStyle = colorScheme[2] ?? "white"
     context.fillRect(0, 0, width, height);
 
     let posX = marginLeft;
     let posY = marginTop;
-
     for (let r = 0; r < rows; r++) {
- 
     	for (let c = 0; c < columns; c++) {
             let increments = getRandomInt(8, 4); // nr of lines inside the circle
             let step = radius / increments;
 
             for (let s = 0; s < (increments); s++) {
                 // draw a 270degree arc, starting from a random 90degree segment
-                drawArc(context, randomColorScheme, posX + radius, posY + radius, s * step, startDrawingCircleAngleGrid[r][c], startDrawingCircleAngleGrid[r][c] + 270); 
+                drawArc(context, colorScheme, posX + radius, posY + radius, s * step, startDrawingCircleAngleGrid[r][c], startDrawingCircleAngleGrid[r][c] + 270); 
             }
     		posX = posX + (radius * 2) + margin;
     	}
     	posX = marginLeft;
     	posY = posY + radius * 2 + margin;
     }
-
-    return [
-      context.canvas,
-    ];
   };
 };
 
-canvasSketch(sketch, settings);
+canvasSketch(sketch, settings)

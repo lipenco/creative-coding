@@ -11,8 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "canvas-sketch": "^0.7.6",
+    "canvas-sketch-util": "^1.10.0",
     "convert-length": "^1.0.1",
     "convert-units": "^2.3.4",
-    "defined": "^1.0.0"
+    "defined": "^1.0.0",
+    "two.js": "^0.8.10"
   }
 }
